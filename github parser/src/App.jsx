@@ -1,3 +1,5 @@
+import { faker } from "@faker-js/faker";
+import { FixedSizeList } from "react-window";
 import GithubUser from './GithubUser';
 import './App.css';
 
@@ -6,27 +8,43 @@ const tahoe_peaks = [
   { name: "Monument Peak", elevation: 10067}
 ];
 
+// Used to create fake information
+const bigList = [...Array(5000)].map(()=> ({
+  name: faker.person.firstName(),
+  email: faker.internet.email(),
+  avatar: faker.image.avatar()
+}));
 
-function List({ data = [], renderEmpty }) {
+
+function List({ data = [], renderRow, renderEmpty }) {
   
-  if (!data.length) return renderEmpty;
+  return !data.length ? renderEmpty : (
 
-  return (
     <ul>
-     {
-      data.map((peak, i)=> (
-        <li key={i}>
-          {peak.name} - {peak.elevation.toLocaleString()}ft
-        </li>
-      ))
-     }
-    </ul>
+    {data.map((item, i) => (
+      <li key={i}>{renderRow(item)}</li>
+    ))}
+  </ul>
   )
+
 }
 
 function App() {
 
-  return <List data={tahoe_peaks} renderEmpty={<p>This list is empty.</p>}/>;
+  const renderRow = ({ index, style }) => (
+    <div style={{ ...style, display: "flex" }}>
+      <img src={bigList[index].avatar} alt={bigList[index].name} width={50}/>
+      <p>
+        {bigList[index].name} - {bigList[index].email}
+      </p>
+    </div>
+  )
+
+  return (
+    <FixedSizeList height={window.innerHeight} width={window.innerWidth - 20} itemCount={bigList.length} itemSize={50}>
+      {renderRow}
+    </FixedSizeList>
+  );
     // <GithubUser login="Dan-I-El"/>
 }
 
