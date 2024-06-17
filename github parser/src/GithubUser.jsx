@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import Fetch from './Fetch';
 import token from "./../token.js";
 
 
@@ -6,35 +6,19 @@ const loadJSON = key => key && JSON.parse(localStorage.getItem(key));
 
 const saveJSON = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
-export function useFetch(uri) {
-
-  const [data, setData] = useState();
-  const [error, setError] = useState();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(()=> {
-
-    if (!uri) return;
-    // if(data && data.login == login) return;
-
-    fetch(uri)
-      .then(response => response.json())
-      .then(setData)
-      .catch(()=> setLoading(false))
-      .catch(setError);
-  }, [uri]);
-
-  return {
-    loading,
-    data,
-    error
-  };
+function GithubUser({login}) {
+  return (
+    <Fetch 
+      uri={`https://api.github.com/users/${login}`}
+      renderSuccess={UserDetails}
+    />
+  );
 }
 
+export default GithubUser;
 
-function GithubUser({login}) {
 
-  const { loading, data, error } = useFetch(`https://api.github.com/users/${login}`);
+function UserDetails({data}) {
 
   // useEffect(()=> {
   //   if (!data) return;
@@ -52,14 +36,6 @@ function GithubUser({login}) {
 
     // if(data && data.login == login) return;
 
-  if (loading) return <h1>Loading...</h1>;
-
-  if (error) return <pre>{JSON.stringify(data, null, 2)}</pre>
-
-  if (!data) {
-    return null;
-  }
-
   return (
     <div className="githubUser">
         <img
@@ -73,9 +49,6 @@ function GithubUser({login}) {
             {data.name && <p>data.name</p>}
             {data.location && <p>{data.location}</p>}
         </div>
-
     </div>
   )
 }
-
-export default GithubUser;

@@ -1,6 +1,5 @@
 import { faker } from "@faker-js/faker";
 import { FixedSizeList } from "react-window";
-import GithubUser from './GithubUser';
 import './App.css';
 
 const tahoe_peaks = [ 
