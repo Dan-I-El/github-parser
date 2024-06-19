@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { useIterator } from "./hooks";
-import RepoReadme from './RepoReadme';
-
 
 export function RepoMenu({
     repositories,
-    login,
+    selected,
     onSelect = f => f
 }) {
-    const [{ name }, previous, next ] = useIterator(repositories);
+    const [{ name }, previous, next ] = useIterator(
+        repositories,
+        selected ? repositories.findIndex(repo=> repo.name === selected) : null
+    );
 
     useEffect(()=> {
         if (!name) return;

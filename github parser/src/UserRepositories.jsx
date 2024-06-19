@@ -1,4 +1,3 @@
-import React from 'react';
 import Fetch from './Fetch';
 import RepoMenu from "./RepoMenu";
 
@@ -9,11 +8,11 @@ function UserRepositories({
 }) {
     return (
         <Fetch
-            uri={`https://api.github.com/users/${login}`},
-            renderSuccess={({data})=> (
+            uri={`https://api.github.com/users/${login}`}
+            renderSuccess={({ data }) => (
                 <RepoMenu
                     repositories={data}
-                    selectedRepo={selectedRepo}
+                    selected={selectedRepo}
                     onSelect={onSelect}
                 />
             )}
