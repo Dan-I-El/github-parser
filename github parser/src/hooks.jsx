@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 
 export function useFetch(uri) {
@@ -6,17 +6,27 @@ export function useFetch(uri) {
     const [data, setData] = useState();
     const [error, setError] = useState();
     const [loading, setLoading] = useState(true);
+
+    const mounted = useMountedRef();
   
     useEffect(()=> {
   
       if (!uri) return;
       // if(data && data.login == login) return;
-  
+      if (!mounted.current) return;
+      setLoading(true);
       fetch(uri)
+        .then(data=> {
+          if (!mounted.current) throw new Error("Component is not mounted");
+          return data;
+        })
         .then(response=> response.json())
         .then(setData)
         .catch(()=> setLoading(false))
-        .catch(setError);
+        .catch(error => {
+          if (!mounted.current) return;
+        })
+      setError;
     }, [uri]);
   
     return {
@@ -49,3 +59,14 @@ export function useFetch(uri) {
 
     return [item || items[i], prev, next];
   };
+
+
+  export function useMountedRef() {
+    const mounted = useRef(false);
+    useEffect(()=> {
+      mounted.current = true;
+      return ()=> (mounted.current = false);
+    });
+
+    return mounted;
+  }

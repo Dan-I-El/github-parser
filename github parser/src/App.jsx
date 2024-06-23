@@ -11,14 +11,25 @@ function App() {
   const [ login, setLogin ] = useState("Dan-i-el");
   const [ repo, setRepo ] = useState("learning-react");
 
+  const handleSearch = login => {
+    if (login) return setLogin(login);
+    setLogin("");
+    setRepo("");
+  }
+
+  // if (!login) {
+
+  //   return (
+  //     <SearchForm value={login} onSearch={handleSearch}/>
+  //   )
+  // }
+
   return (
     <>
       {/* <SearchForm value={login} onSearch={setLogin} /> */}
-      { login && <GithubUser login="Dan-I-El"/> }
-      { login && <UserRepositories login={login} repo={repo} onSelect={setRepo}/> }
-      { login && repo && (
-        <RepoReadme login={login} repo={repo} />
-      )}
+      <GithubUser login="Dan-I-El"/>
+      <UserRepositories login={login} repo={repo} onSelect={setRepo}/>
+      <RepoReadme login={login} repo={repo} />
     </>
   )
 }
